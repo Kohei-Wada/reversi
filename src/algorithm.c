@@ -7,12 +7,11 @@ typedef struct algorithm {
 } algorithm_t;
 
 
-
 move_t algorithm_random(void)
 {
 	move_t m;
-	m.x = random() % 64;
-	m.y = random() % 64;
+	m.x = random() % 8;
+	m.y = random() % 8;
 	return m;
 }
 

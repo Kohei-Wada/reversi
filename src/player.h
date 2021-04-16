@@ -2,9 +2,12 @@
 #define _PLAYER_H
 #include "algorithm.h"
 #include "move.h"
+#include "reversi.h"
+
 
 typedef struct player {
 	algorithm_t *algorithm;
+	color_t color;
 } player_t;
 
 

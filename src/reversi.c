@@ -3,8 +3,6 @@
 #include <stdlib.h> 
 #include "move.h"
 
-
-
 static const int board_size = 8;
 
 typedef enum {EMPTY = 0 , BLACK, WHITE} color_t;
@@ -19,15 +17,15 @@ typedef struct reversi {
 static int position(int x, int y) {
 	return board_size * y + x;
 }
-static const int top_left_corner = 0;
-static const int top_right_corner = board_size - 1;
-static const int bottom_left_corner = board_size * (board_size - 1);
-static const int bottom_right_corner = board_size * (board_size -1 );
+static const int top_left_corner     = 0;
+static const int top_right_corner    = board_size - 1;
+static const int bottom_left_corner  = board_size * (board_size - 1);
+static const int bottom_right_corner = (board_size * board_size) -1 ;
 
 static int is_corner(int p)
 {
 	return p == top_left_corner || p == top_right_corner \
-			  || p == bottom_left_corner || bottom_right_corner;
+			  || p == bottom_left_corner || p == bottom_right_corner;
 }
 
 static int end_left(int p)
@@ -56,7 +54,6 @@ void reversi_init(reversi_t **r)
 {
 	*r = malloc(sizeof(reversi_t));
 	(*r)->array = malloc(sizeof(char) * board_size * board_size); 
-
 	int pos = position(board_size / 2 - 1, board_size / 2 - 1); 
 	(*r)->array[pos] = BLACK;
 	(*r)->array[pos + 1] = WHITE;
@@ -69,13 +66,12 @@ void reversi_free(reversi_t *r)
 	free(r);
 }
 
-
 static void reversi_draw_line(void)
 {
-	printf("\n    +");
+	printf("\n    \e[42m\e[1m\e[30m+\e[0m");
 	for (int i = 1; i < board_size; ++i) 
-		printf("---+");
-	printf("---+\n");
+		printf("\e[42m\e[1m\e[30m---+\e[0m");
+	printf("\e[42m\e[30m---+\n\e[0m");
 }
 
 static void reversi_draw_char(void)
@@ -95,12 +91,12 @@ void reversi_display(reversi_t *r)
 	reversi_draw_line();
 
 	for (j = 1; j <= board_size; ++j) {
-		printf("  %d |", j);
+		printf("  %d \e[42m\e[30m|\e[0m", j);
 		for (i = 1; i <= board_size; ++i, ++k) {
 			switch (r->array[k]) {
-			case BLACK : printf(" o |"); break;
-			case WHITE : printf(" x |"); break;
-			default    : printf("   |"); break;
+			case BLACK : printf("\e[1m\e[42m\e[30m @ |\e[0m");       break;
+			case WHITE : printf("\e[1m\e[42m\e[37m o \e[30m|\e[0m"); break;
+			default    : printf("\e[1m\e[42m   \e[30m|\e[0m");       break;
 			}
 		}
 		printf(" %d", j);
@@ -108,7 +104,6 @@ void reversi_display(reversi_t *r)
 	}
 	reversi_draw_char();
 	printf("\n\n");
-	
 }
 
 
@@ -119,7 +114,7 @@ int reversi_is_possible(reversi_t *r, move_t *m, color_t c)
 	color_t op = c == WHITE? BLACK : WHITE;
 
 	if (m->x == -1 && m->y == -1) return 0;
-	if (r->array[cpos] != EMPTY) return 0;
+	if (r->array[cpos] != EMPTY)  return 0;
 
 
 	/*horizontale 1*/
@@ -136,13 +131,13 @@ int reversi_is_possible(reversi_t *r, move_t *m, color_t c)
 
 	/*vertical 1*/
 	if (!end_up(cpos) && r->array[i = cpos - board_size] == op) {
-		for (; end_up(i) && r->array[i] == op; i -= board_size);
+		for (; !end_up(i) && r->array[i] == op; i -= board_size);
 		if (r->array[i] == c) return 1;
 	}
 
 	/*vertical 2*/
 	if (!end_down(cpos) && r->array[i = cpos + board_size] == op) {
-		for (; end_down(i) && r->array[i] == op; i += board_size);
+		for (; !end_down(i) && r->array[i] == op; i += board_size);
 		if (r->array[i] == c) return 1; 
 	}
 
@@ -170,7 +165,6 @@ int reversi_is_possible(reversi_t *r, move_t *m, color_t c)
 	return 0;
 }
 
-
 int reversi_exitsts_moves(reversi_t *r, color_t c)
 {
 	move_t m;
@@ -184,4 +178,82 @@ int reversi_exitsts_moves(reversi_t *r, color_t c)
 	return 0;
 }
 
+
+void reversi_put(reversi_t *r, move_t *m, color_t c) 
+{
+	const int cpos = position(m->x, m->y);
+	int i;
+
+	color_t op = c == BLACK? WHITE : BLACK; 
+
+	r->array[cpos] = c;
+
+
+	/*horizontal1*/
+	if (!end_left(cpos)) {
+		for (i = cpos - 1; !end_left(i) && r->array[i] == op; --i);
+		if (r->array[i] == c)
+			for (; i < cpos; r->array[++i] = c);
+	}
+	
+
+	/*horizontal2*/
+	if (!end_right(cpos)) {
+		for (i = cpos + 1; !end_right(i) && r->array[i] == op; ++i);
+		if (r->array[i] == c)
+			for (; i > cpos; r->array[--i] = c);
+	}
+
+
+	/*vertical1*/
+	if (!end_up(cpos)) {
+		for (i = cpos - board_size; !end_up(i) && r->array[i] == op; i -= board_size);
+		if (r->array[i] == c)
+			for (; i < cpos; r->array[i += board_size] = c);
+	}
+
+	/*vertical2*/
+	if (!end_down(cpos)) {
+		for (i = cpos + board_size; !end_down(i) && r->array[i] == op; i += board_size);
+		if (r->array[i] == c)
+			for (; i > cpos; r->array[i -= board_size] = c);
+	}
+
+	/*diagonal1*/
+	if (!end_left(cpos) && !end_up(cpos)) {
+		for (i = cpos - board_size - 1; !end_left(i) && !end_up(i) && 
+				r->array[i] == op; i -= board_size + 1);
+
+		if (r->array[i] == c)
+			for (; i < cpos; r->array[i += board_size + 1] = c);
+	}
+
+	/*diagonal2*/
+	if (!end_right(cpos) && !end_down(cpos)) {
+		for (i = cpos + board_size + 1; !end_right(i) && !end_down(i) && 
+				r->array[i] == op; i += board_size + 1);
+
+		if (r->array[i] == c)
+			for (; i > cpos; r->array[i -= board_size + 1] = c);
+	}
+
+	/*diagonal3*/
+	if (!end_left(cpos) && !end_down(cpos)) {
+		for (i = cpos + board_size - 1; !end_left(i) && !end_down(i) && 
+				r->array[i] == op; i += board_size - 1);
+
+		if (r->array[i] == c)
+			for (; i > cpos; r->array[i -= board_size - 1] = c);
+	}
+
+	/*diagonal4*/
+	if (!end_right(cpos) && !end_up(cpos)) {
+		for (i = cpos - board_size + 1; !end_right(i) && !end_up(i) && 
+				r->array[i] == op; i -= board_size - 1);
+
+		if (r->array[i] == c)
+			for (; i < cpos; r->array[i += board_size - 1] = c);
+	}
+
+}
 

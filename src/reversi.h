@@ -13,6 +13,6 @@ void reversi_init(reversi_t **r);
 void reversi_free(reversi_t *r);
 void reversi_display(reversi_t *r);
 int reversi_is_possible(reversi_t *r, move_t *m, color_t c);
-void reversi_put_disk(reversi_t *r, move_t *m, color_t c);
+void reversi_put(reversi_t *r, move_t *m, color_t c);
 
 #endif

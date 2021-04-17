@@ -1,4 +1,4 @@
-OBJECTS = test.o link_list.o game.o player.o algorithm.o reversi.o
+OBJECTS = test.o link_list.o game.o player.o algorithm.o reversi.o command.o
 CFLAGS = -g -Wall
 INCLUDE = -I include 
 TARGET = test

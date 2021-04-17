@@ -6,7 +6,6 @@ typedef struct algorithm {
 	 move_t (*getmove)(void); 
 } algorithm_t;
 
-
 move_t algorithm_random(void)
 {
 	move_t m;
@@ -22,15 +21,9 @@ void algorithm_init(algorithm_t **a)
 	(*a)->getmove = algorithm_random;
 }
 
-
 void algorithm_free(algorithm_t *a) 
 {
 	free(a);
-}
-
-
-void algorithm_get_move(algorithm_t *a) 
-{
 }
 
  

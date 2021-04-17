@@ -11,17 +11,13 @@ typedef struct game {
 	player_t *player[2];
 } game_t;
 
-static void move_print(move_t m)
-{
-	printf("x = %d, y = %d\n", m.x, m.y);
-}
-
 void game_init(game_t **g)
 {
 	*g = malloc(sizeof(game_t));
 	reversi_init(&(*g)->reversi);
-	for (int i = 0; i < 2; ++i) 
-		player_init(&(*g)->player[i]);
+
+	player_init(&(*g)->player[0], BLACK);
+	player_init(&(*g)->player[1], WHITE);
 }
 
 void game_free(game_t *g) 
@@ -32,29 +28,22 @@ void game_free(game_t *g)
 	free(g);
 }
 
-
-
-
-void test(move_t m, game_t *g){
-	if (reversi_is_possible(g->reversi, &m, WHITE)) printf("white x = %d, y = %d\n", m.x, m.y);
-	if (reversi_is_possible(g->reversi, &m, BLACK)) printf("black x = %d, y = %d\n", m.x, m.y);
-}
-
-
 void game_run(game_t *g)
 {
 	move_t m;
+	int i = 0;
+	color_t c;
 
-	reversi_display(g->reversi);
-
-	for (int y = 0; y < 8; ++y) {
-		for (int x = 0; x < 8; ++x) {
-			m.x = x; m.y = y;
-			test(m, g);
-		}
+	while (1) {
+		system("clear");
+		m = player_get_move(g->player[i]);
+		c = player_color(g->player[i]);
+		if (reversi_is_possible(g->reversi, &m, c)) 
+			reversi_put(g->reversi, &m, c);
+		i = !i;
+		reversi_display(g->reversi);
+		usleep(100000);
 	}
-
 }
-
 
 

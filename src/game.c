@@ -62,13 +62,14 @@ void game_run(game_t *g)
 
 	while (active) {
 		for (int i = 0; i < 2; ++i) {
+			m.x = -1; m.y = -1;
+
 			system("clear");
 			reversi_display(g->reversi);
-			retval = player_gen_move(g->player[i], &m);
+			retval = player_gen_move(g->player[i], g->reversi, &m);
 
 			if (retval < 0) {
-				active = 0;
-				break;
+				active = 0; break;
 			}
 			reversi_put(g->reversi, player_disc(g->player[i]), &m);
 		}

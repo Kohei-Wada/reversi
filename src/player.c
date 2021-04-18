@@ -17,11 +17,9 @@ void player_init(player_t **p, disc_t d, algorithm_t *a)
 	(*p)->interface = a;
 }
 
-int  player_gen_move(player_t *p, move_t *m)
+int  player_gen_move(player_t *p, reversi_t *r, move_t *m)
 {
-	int retval = 0;
-	retval = p->interface->gen_move(m);
-	return retval;
+	 return p->interface->gen_move(r, p->d, m);
 }
 
 void player_free(player_t *p)

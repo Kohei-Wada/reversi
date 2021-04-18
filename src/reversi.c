@@ -191,7 +191,6 @@ void reversi_put(reversi_t *r, disc_t d, move_t *m)
 	int i;
 
 	disc_t op = d == WHITE? BLACK : WHITE;
-
 	r->array[cpos] = d;
 
 	/*horizontal1*/

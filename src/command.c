@@ -4,10 +4,9 @@
 #include <stdlib.h> 
 #include "disc.h"
 #include "move.h"
-
+#include "reversi.h"
 
 static const int board_size = 8;
-
 
 static int __is_a_valid_str(char *buf) 
 {   
@@ -44,10 +43,29 @@ static int __is_a_valid_str(char *buf)
 } 
 
 
-int command_get(move_t *move)
+static void print_possible(reversi_t *r, disc_t d) 
+{
+	move_t m;
+	for (int y = 0; y < 8; ++y) {
+		for (int x = 0; x < 8; ++x) {
+			m.x = x; m.y = y; 
+			if (reversi_is_possible(r, d, &m))
+				printf("x = %c, y = %d is possible\n", 'A' + x, y + 1);
+
+		}
+	}
+}
+
+			
+
+int command_get(reversi_t *r, disc_t d, move_t *m)
 {
 	char cmd[10];
 
+	print_possible(r, d);
+	
+
+	printf("disc = %c ", d);
 	printf("enter command : ");
 	fgets(cmd, sizeof(cmd), stdin);
 	cmd[strlen(cmd) - 1] = '\0';
@@ -56,7 +74,7 @@ int command_get(move_t *move)
 		return -1;
 
 	if (__is_a_valid_str(cmd) == 0) {
-		move->x = cmd[0]; move->y = cmd[1];
+		m->x = cmd[0]; m->y = cmd[1];
 		return 0;
 	}
 	return 0;

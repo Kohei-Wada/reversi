@@ -3,7 +3,7 @@
 #include "move.h"
 
 typedef struct algorithm {
-	move_t (*gen_move)(void);
+	int (*gen_move)(move_t *m);
 }algorithm_t;
 
 #endif

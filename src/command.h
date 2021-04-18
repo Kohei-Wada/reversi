@@ -3,7 +3,7 @@
 
 #include "move.h"
 
-move_t command_get(void);
+int command_get(move_t *m);
 
 #endif
 

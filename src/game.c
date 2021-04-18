@@ -57,15 +57,21 @@ void game_free(game_t *g)
 void game_run(game_t *g)
 {
 	move_t m;
+	int retval = 0;
+	int active = 1;
 
-	for (int i = 32; i ; --i) {
-		for (int j = 0; j < 2; ++j) {
+	while (active) {
+		for (int i = 0; i < 2; ++i) {
+			system("clear");
 			reversi_display(g->reversi);
-			m = player_gen_move(g->player[j]);
-			print_move(m);
-			reversi_put(g->reversi, player_disc(g->player[j]), &m);
+			retval = player_gen_move(g->player[i], &m);
+
+			if (retval < 0) {
+				active = 0;
+				break;
+			}
+			reversi_put(g->reversi, player_disc(g->player[i]), &m);
 		}
 	}
 }
-
 

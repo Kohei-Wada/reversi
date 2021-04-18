@@ -44,21 +44,22 @@ static int __is_a_valid_str(char *buf)
 } 
 
 
-move_t command_get(void)
+int command_get(move_t *move)
 {
-	move_t move = {.x = -1, .y = -1};
 	char cmd[10];
+
 	printf("enter command : ");
 	fgets(cmd, sizeof(cmd), stdin);
 	cmd[strlen(cmd) - 1] = '\0';
 
 	if (strcmp(cmd, "quit") == 0 || strcmp(cmd, "q") == 0) 
-		exit(0);
+		return -1;
+
 	if (__is_a_valid_str(cmd) == 0) {
-		move.x = cmd[0]; move.y = cmd[1];
-		return move;
+		move->x = cmd[0]; move->y = cmd[1];
+		return 0;
 	}
-	return move;
+	return 0;
 }
 
 

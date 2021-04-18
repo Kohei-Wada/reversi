@@ -1,38 +1,34 @@
-#include <stdlib.h>
-#include "algorithm.h"
+#include <stdlib.h> 
+
+#include "disc.h"
 #include "move.h"
-#include "reversi.h"
+#include "algorithm.h"
 
 typedef struct player {
-	algorithm_t *algorithm;
-	color_t c;
+	disc_t d;
+	algorithm_t *interface;
 } player_t;
+	
 
-void player_init(player_t **p, color_t c)
+void player_init(player_t **p, disc_t d, algorithm_t *a)
 {
 	*p = malloc(sizeof(player_t));
-	(*p)->c = c;
-	algorithm_init(&(*p)->algorithm);
+	(*p)->d = d;
+	(*p)->interface = a;
+}
+
+move_t player_gen_move(player_t *p)
+{
+	return p->interface->gen_move();
 }
 
 void player_free(player_t *p)
 {
-	algorithm_free(p->algorithm);
 	free(p);
 }
 
-move_t player_get_move(player_t *p)
+disc_t player_disc(player_t *p)
 {
-	 return  p->algorithm->getmove();
-}
-
-void player_change_algorithm(player_t *p, algorithm_t *a)
-{
-	p->algorithm = a;
-}
-
-color_t player_color(player_t *p)
-{
-	return p->c;
+	return p->d;
 }
 

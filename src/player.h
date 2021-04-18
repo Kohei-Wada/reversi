@@ -1,19 +1,13 @@
-#ifndef _PLAYER_H
-#define _PLAYER_H
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
 #include "algorithm.h"
 #include "move.h"
-#include "reversi.h"
+#include "disc.h"
+typedef struct player player_t;
 
-
-typedef struct player {
-	algorithm_t *algorithm;
-	color_t c;
-} player_t;
-
-
-void player_init(player_t **p, color_t c);
+void player_init(player_t **p, disc_t d, algorithm_t *a);
 void player_free(player_t *p);
-move_t player_get_move(player_t *p);
+move_t player_gen_move(player_t *p);
+disc_t player_disc(player_t *p);
 
-color_t player_color(player_t *p);
-#endif 
+#endif

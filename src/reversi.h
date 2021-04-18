@@ -1,18 +1,18 @@
 #ifndef _REVERSI_H_
 #define _REVERSI_H_
 #include "move.h"
+#include "disc.h"
 
+#define REVERSI_SIZE 8
 
-typedef enum {EMPTY = 0, BLACK, WHITE} color_t;
-
-typedef struct reversi {
-	int i;
-} reversi_t;
+typedef struct reversi reversi_t;
+	
 
 void reversi_init(reversi_t **r);
 void reversi_free(reversi_t *r);
 void reversi_display(reversi_t *r);
-int reversi_is_possible(reversi_t *r, move_t *m, color_t c);
-void reversi_put(reversi_t *r, move_t *m, color_t c);
+void reversi_is_possible(reversi_t *r, disc_t d, move_t *m);
+void reversi_exist_moves(reversi_t *r, disc_t d);
+void reversi_put(reversi_t *r, disc_t d, move_t *m);
 
 #endif

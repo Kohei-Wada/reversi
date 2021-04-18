@@ -1,28 +1,11 @@
-#include <stdio.h>
 #include "game.h"
-#include "command.h"
-
-#include "move.h"
-
-void print_move(move_t *m)
-{
-
-	printf("move.x = %d\n", m->x);
-
-	printf("move.y = %d\n", m->y);
-
-}
-
+#include "reversi.h"
 int main(void)
 {
-	move_t m;
-	int retval = 0;
-	while (retval == 0) {
-		retval = command_get(&m);
-		print_move(&m);
-	}
-
+	game_t *g;
+	game_init(&g);
+	game_run(g);
+	game_free(g);
 	return 0;
-
 }
 

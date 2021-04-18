@@ -2,13 +2,11 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h> 
-#include "reversi.h" /*include color_t*/
+#include "disc.h"
 #include "move.h"
 
 
-
 static const int board_size = 8;
-
 
 
 static int __is_a_valid_str(char *buf) 
@@ -46,25 +44,21 @@ static int __is_a_valid_str(char *buf)
 } 
 
 
-int command_get(move_t *move)
+move_t command_get(void)
 {
+	move_t move = {.x = -1, .y = -1};
 	char cmd[10];
 	printf("enter command : ");
 	fgets(cmd, sizeof(cmd), stdin);
 	cmd[strlen(cmd) - 1] = '\0';
-	printf("cmd = %s\n", cmd); 
 
-	if (strcmp(cmd, "quit") == 0 || strcmp(cmd, "q") == 0 ) 
-		return -1;
-
-	if (__is_a_valid_str(cmd) == 0 ) {
-		printf("cmd0 = %d, cmd1 = %d\n", cmd[0], cmd[1]);
-		move->x = cmd[0]; 
-		move->y = cmd[1];
-		return 0;
+	if (strcmp(cmd, "quit") == 0 || strcmp(cmd, "q") == 0) 
+		exit(0);
+	if (__is_a_valid_str(cmd) == 0) {
+		move.x = cmd[0]; move.y = cmd[1];
+		return move;
 	}
-	return 0;
-
+	return move;
 }
 
 
